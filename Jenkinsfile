@@ -2,7 +2,11 @@ pipeline {
     agent any
 
     triggers {
-        githubPush()   
+        githubPush()
+    }
+
+    tools {
+        maven 'Maven_3.8.12'  // doit correspondre au nom configuré dans Jenkins
     }
 
     stages {
@@ -12,34 +16,28 @@ pipeline {
             }
         }
 
-        stage('Préparer le dossier build') {
-            steps {
-                bat 'if not exist build mkdir build'
-            }
-        }
-
         stage('Compiler le projet') {
             steps {
-                bat 'dir /s /b src\\*.java > sources.txt && javac -d build @sources.txt'
+                bat 'mvn clean compile'
             }
         }
 
         stage('Tests unitaires') {
             steps {
-                echo 'Pas de tests unitaires configurés pour ce projet.'
+                bat 'mvn test'
             }
         }
 
         stage('Générer le package') {
             steps {
-                bat 'jar cvf app.jar -C build .'
+                bat 'mvn package'
             }
         }
 
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat 'sonar-scanner -Dsonar.projectKey=GestionFilAttente -Dsonar.sources=src'
+                    bat 'mvn sonar:sonar'
                 }
             }
         }
