@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +24,7 @@ class UserDAOImplTest {
         Connection conn = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1", "sa", "");
         Statement stmt = conn.createStatement();
 
-        // ⚠️ Renommer la table en "users" pour éviter le mot réservé "user"
+        // Créer la table "users" (⚠️ pas "user")
         stmt.execute("CREATE TABLE users (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY," +
                 "nom VARCHAR(50), prenom VARCHAR(50), email VARCHAR(100), tel VARCHAR(20), adresse VARCHAR(100)," +
@@ -46,7 +47,7 @@ class UserDAOImplTest {
         user.setAdresse("Khouribga");
         user.setLogin("ali");
         user.setPassword("pass");
-        user.setRole(User.Role.MEDECIN); // ou PATIENT, SECRETAIRE
+        user.setRole(User.Role.MEDECIN);
         user.setDateDeNaissance(Date.valueOf("1990-01-01"));
         user.setCin("AB123456");
 
@@ -56,5 +57,38 @@ class UserDAOImplTest {
         User fetched = userDAO.findById(user.getId());
         assertNotNull(fetched);
         assertEquals("Ali", fetched.getNom());
+    }
+
+    @Test
+    void testFindByLogin() throws DAOException {
+        User user = userDAO.findByLogin("ali", "pass");
+        assertNotNull(user);
+        assertEquals("Ali", user.getNom());
+    }
+
+    @Test
+    void testUpdate() throws DAOException {
+        User user = userDAO.findByLogin("ali", "pass");
+        user.setNom("Ali Updated");
+        userDAO.update(user);
+
+        User updated = userDAO.findById(user.getId());
+        assertEquals("Ali Updated", updated.getNom());
+    }
+
+    @Test
+    void testGetAll() throws DAOException {
+        List<User> users = userDAO.getAll();
+        assertFalse(users.isEmpty());
+        assertEquals("Ali Updated", users.get(0).getNom());
+    }
+
+    @Test
+    void testDelete() throws DAOException {
+        User user = userDAO.findByLogin("ali", "pass");
+        userDAO.delete(user.getId());
+
+        User deleted = userDAO.findById(user.getId());
+        assertNull(deleted);
     }
 }
