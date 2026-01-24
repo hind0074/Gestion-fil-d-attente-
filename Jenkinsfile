@@ -6,31 +6,32 @@ pipeline {
     }
 
     stages {
-
-        stage('Cloner le projet') {
+        stage('Cloner le repo') {
             steps {
                 git url: 'https://github.com/hind0074/Gestion-fil-d-attente-.git', branch: 'develop'
             }
         }
 
+        stage('Préparer le dossier build') {
+            steps {
+                bat 'if not exist build mkdir build'
+            }
+        }
+
         stage('Compiler le projet') {
             steps {
-                // Compile tous les fichiers Java du dossier src
-                bat 'javac -d build src\\**\\*.java'
+                bat 'dir /s /b src\\*.java > sources.txt && javac -d build @sources.txt'
             }
         }
 
         stage('Tests unitaires') {
             steps {
-                // Si tu as des tests JUnit, tu peux les lancer avec java -cp
-                // Sinon, tu peux ignorer ou mettre un echo
                 echo 'Pas de tests unitaires configurés pour ce projet.'
             }
         }
 
         stage('Générer le package') {
             steps {
-                // Crée un fichier JAR à partir des classes compilées
                 bat 'jar cvf app.jar -C build .'
             }
         }
@@ -38,12 +39,10 @@ pipeline {
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    // Analyse du code source avec SonarScanner (pas Maven)
                     bat 'sonar-scanner -Dsonar.projectKey=GestionFilAttente -Dsonar.sources=src'
                 }
             }
         }
-        
     }
 
     post {
