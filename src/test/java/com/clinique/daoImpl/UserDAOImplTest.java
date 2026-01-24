@@ -23,8 +23,8 @@ class UserDAOImplTest {
         Connection conn = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1", "sa", "");
         Statement stmt = conn.createStatement();
 
-        // Créer la table user
-        stmt.execute("CREATE TABLE user (" +
+        // ⚠️ Renommer la table en "users" pour éviter le mot réservé "user"
+        stmt.execute("CREATE TABLE users (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY," +
                 "nom VARCHAR(50), prenom VARCHAR(50), email VARCHAR(100), tel VARCHAR(20), adresse VARCHAR(100)," +
                 "login VARCHAR(50), password VARCHAR(50), role VARCHAR(20), date_de_naissance DATE, cin VARCHAR(20))");
@@ -34,7 +34,6 @@ class UserDAOImplTest {
         // Simuler DAOFactory
         daoFactory = new TestDAOFactory();
         userDAO = new UserDAOImpl(daoFactory);
-
     }
 
     @Test
