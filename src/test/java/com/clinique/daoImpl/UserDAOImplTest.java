@@ -20,12 +20,16 @@ class UserDAOImplTest {
 
     @BeforeAll
     static void setupDatabase() throws Exception {
-        // Connexion à une base H2 en mémoire
+       
         Connection conn = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1", "sa", "");
         Statement stmt = conn.createStatement();
 
-        // Créer la table "users" (⚠️ pas "user")
-        stmt.execute("CREATE TABLE \"USER\" (" + "id INT AUTO_INCREMENT PRIMARY KEY," + "nom VARCHAR(50), prenom VARCHAR(50), email VARCHAR(100), tel VARCHAR(20), adresse VARCHAR(100)," + "login VARCHAR(50), password VARCHAR(50), role VARCHAR(20), date_de_naissance DATE, cin VARCHAR(20))");
+       
+        stmt.execute("CREATE TABLE \"USER\" (" +
+        	    "id INT AUTO_INCREMENT PRIMARY KEY," +
+        	    "nom VARCHAR(50), prenom VARCHAR(50), email VARCHAR(100), tel VARCHAR(20), adresse VARCHAR(100)," +
+        	    "login VARCHAR(50), password VARCHAR(50), role VARCHAR(20), date_de_naissance DATE, cin VARCHAR(20))");
+
         conn.close();
 
         // Simuler DAOFactory
