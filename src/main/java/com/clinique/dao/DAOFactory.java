@@ -30,7 +30,7 @@ public class DAOFactory {
     private String username;
     private String password;
 
-    private DAOFactory(String url, String username, String password) {
+    public DAOFactory(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
