@@ -25,10 +25,10 @@ class UserDAOImplTest {
         Statement stmt = conn.createStatement();
 
         // Créer la table "users" (⚠️ pas "user")
-        stmt.execute("CREATE TABLE utilisateurs (" +
-                "id INT AUTO_INCREMENT PRIMARY KEY," +
-                "nom VARCHAR(50), prenom VARCHAR(50), email VARCHAR(100), tel VARCHAR(20), adresse VARCHAR(100)," +
-                "login VARCHAR(50), password VARCHAR(50), role VARCHAR(20), date_de_naissance DATE, cin VARCHAR(20))");
+        stmt.execute("CREATE TABLE \"user\" (" +
+        	    "id INT AUTO_INCREMENT PRIMARY KEY," +
+        	    "nom VARCHAR(50), prenom VARCHAR(50), email VARCHAR(100), tel VARCHAR(20), adresse VARCHAR(100)," +
+        	    "login VARCHAR(50), password VARCHAR(50), role VARCHAR(20), date_de_naissance DATE, cin VARCHAR(20))");
 
         conn.close();
 
