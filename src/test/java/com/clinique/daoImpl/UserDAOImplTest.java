@@ -1,9 +1,13 @@
 package com.clinique.daoImpl;
 
 import com.clinique.beans.User;
+import com.clinique.dao.DAOFactory;
+
 import org.junit.jupiter.api.Test;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,4 +47,28 @@ class UserDAOImplTest {
         assertEquals(User.Role.MEDECIN, user.getRole());
         assertEquals(Date.valueOf("1990-01-01"), user.getDateDeNaissance());
     }
+    @Test
+    void testFindByLoginWithMock() throws Exception {
+        ResultSet rs = mock(ResultSet.class);
+        when(rs.next()).thenReturn(true);
+        when(rs.getString("login")).thenReturn("ali");
+        when(rs.getString("password")).thenReturn("pass");
+        when(rs.getString("role")).thenReturn("MEDECIN");
+
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        when(stmt.executeQuery()).thenReturn(rs);
+
+        Connection conn = mock(Connection.class);
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+
+        DAOFactory fakeFactory = mock(DAOFactory.class);
+        when(fakeFactory.getConnection()).thenReturn(conn);
+
+        UserDAOImpl dao = new UserDAOImpl(fakeFactory);
+        User user = dao.findByLogin("ali", "pass");
+
+        assertNotNull(user);
+        assertEquals("ali", user.getLogin());
+    }
+
 }
