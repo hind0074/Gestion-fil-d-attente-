@@ -1,16 +1,13 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven_3.8.12' // configuré dans Jenkins
+    triggers {
+        githubPush()   
     }
 
     stages {
-        stage('Cloner le repo') {
-            steps {
-                git 'https://github.com/hind0074/Gestion-fil-d-attente-.git'
-            }
-        }
+
+        stage('Cloner le projet') { steps { git url: 'https://github.com/hind0074/Gestion-fil-d-attente-.git', branch: 'develop' } }
 
         stage('Compiler le projet') {
             steps {
@@ -36,6 +33,16 @@ pipeline {
                     sh 'mvn sonar:sonar'
                 }
             }
+        }
+        
+    }
+
+    post {
+        success {
+            echo 'Build et analyse terminés avec succès !'
+        }
+        failure {
+            echo 'Échec du build ou des tests.'
         }
     }
 }
