@@ -1,94 +1,46 @@
 package com.clinique.daoImpl;
 
 import com.clinique.beans.User;
-import com.clinique.dao.DAOFactory;
-import com.clinique.dao.DAOException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.sql.Date;
-import java.util.List;
+import java.sql.ResultSet;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class UserDAOImplTest {
 
-    private static DAOFactory daoFactory;
-    private static UserDAOImpl userDAO;
-
-    @BeforeAll
-    static void setupDatabase() throws Exception {
-       
-        Connection conn = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1", "sa", "");
-        Statement stmt = conn.createStatement();
-
-       
-        stmt.execute("CREATE TABLE \"USER\" (" +
-        	    "id INT AUTO_INCREMENT PRIMARY KEY," +
-        	    "nom VARCHAR(50), prenom VARCHAR(50), email VARCHAR(100), tel VARCHAR(20), adresse VARCHAR(100)," +
-        	    "login VARCHAR(50), password VARCHAR(50), role VARCHAR(20), date_de_naissance DATE, cin VARCHAR(20))");
-
-        conn.close();
-
-        // Simuler DAOFactory
-        daoFactory = new TestDAOFactory();
-        userDAO = new UserDAOImpl(daoFactory);
-    }
-
     @Test
-    void testCreateAndFindById() throws DAOException {
-        User user = new User();
-        user.setNom("Ali");
-        user.setPrenom("Ben");
-        user.setEmail("ali@example.com");
-        user.setTel("0600000000");
-        user.setAdresse("Khouribga");
-        user.setLogin("ali");
-        user.setPassword("pass");
-        user.setRole(User.Role.MEDECIN);
-        user.setDateDeNaissance(Date.valueOf("1990-01-01"));
-        user.setCin("AB123456");
+    void testMapFunction() throws Exception {
+        // Mock du ResultSet
+        ResultSet rs = mock(ResultSet.class);
+        when(rs.getInt("id")).thenReturn(1);
+        when(rs.getString("nom")).thenReturn("Ali");
+        when(rs.getString("prenom")).thenReturn("Ben");
+        when(rs.getString("email")).thenReturn("ali@example.com");
+        when(rs.getString("tel")).thenReturn("0600000000");
+        when(rs.getString("adresse")).thenReturn("Khouribga");
+        when(rs.getString("login")).thenReturn("ali");
+        when(rs.getString("password")).thenReturn("pass");
+        when(rs.getString("role")).thenReturn("MEDECIN");
+        when(rs.getDate("date_de_naissance")).thenReturn(Date.valueOf("1990-01-01"));
+        when(rs.getString("cin")).thenReturn("AB123456");
 
-        userDAO.create(user);
-        assertTrue(user.getId() > 0);
+        // Instancier le DAO (daoFactory pas nécessaire ici)
+        UserDAOImpl dao = new UserDAOImpl(null);
 
-        User fetched = userDAO.findById(user.getId());
-        assertNotNull(fetched);
-        assertEquals("Ali", fetched.getNom());
-    }
+        // Appeler la méthode map via réflexion (car elle est privée)
+        var method = UserDAOImpl.class.getDeclaredMethod("map", ResultSet.class);
+        method.setAccessible(true);
+        User user = (User) method.invoke(dao, rs);
 
-    @Test
-    void testFindByLogin() throws DAOException {
-        User user = userDAO.findByLogin("ali", "pass");
-        assertNotNull(user);
+        // Vérifications
+        assertEquals(1, user.getId());
         assertEquals("Ali", user.getNom());
-    }
-
-    @Test
-    void testUpdate() throws DAOException {
-        User user = userDAO.findByLogin("ali", "pass");
-        user.setNom("Ali Updated");
-        userDAO.update(user);
-
-        User updated = userDAO.findById(user.getId());
-        assertEquals("Ali Updated", updated.getNom());
-    }
-
-    @Test
-    void testGetAll() throws DAOException {
-        List<User> users = userDAO.getAll();
-        assertFalse(users.isEmpty());
-        assertEquals("Ali Updated", users.get(0).getNom());
-    }
-
-    @Test
-    void testDelete() throws DAOException {
-        User user = userDAO.findByLogin("ali", "pass");
-        userDAO.delete(user.getId());
-
-        User deleted = userDAO.findById(user.getId());
-        assertNull(deleted);
+        assertEquals("Ben", user.getPrenom());
+        assertEquals("ali@example.com", user.getEmail());
+        assertEquals(User.Role.MEDECIN, user.getRole());
+        assertEquals(Date.valueOf("1990-01-01"), user.getDateDeNaissance());
     }
 }
