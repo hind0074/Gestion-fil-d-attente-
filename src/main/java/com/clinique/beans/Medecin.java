@@ -1,6 +1,8 @@
 package com.clinique.beans;
 
-public class Medecin extends User {
+import java.io.Serializable;
+
+public class Medecin extends User implements Serializable {
 	private int medecinId;
 
 

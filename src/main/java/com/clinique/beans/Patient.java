@@ -1,6 +1,8 @@
 package com.clinique.beans;
 
-public class Patient extends User {
+import java.io.Serializable;
+
+public class Patient extends User implements Serializable {
 
     private int id;  
     private int nbRdv;  
@@ -16,11 +18,11 @@ public class Patient extends User {
         super(nom, prenom, email, tel, adresse, login, password, Role.PATIENT, dateNaissance, cin);
     }
 
-
+    @Override
     public int getId() {
         return id;
     }
-
+    @Override
     public void setId(int id) {
         this.id = id;
     }

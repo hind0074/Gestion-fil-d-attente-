@@ -37,7 +37,7 @@ public class RapportMedical {
     public String getPatientTel() { return patientTel == null ? "" : patientTel; }
     public void setPatientTel(String patientTel) { this.patientTel = patientTel; }
 
-    public RapportMedical() {}
+    public RapportMedical() {throw new UnsupportedOperationException("Not implemented yet");}
 
     // Getters & Setters
     public Long getId() { return id; }
