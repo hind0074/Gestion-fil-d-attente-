@@ -34,13 +34,7 @@ pipeline {
             }
         }
 
-        stage('Analyse SonarQube') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    bat 'mvn sonar:sonar'
-                }
-            }
-        }
+        stage('Analyse SonarQube') { steps { withSonarQubeEnv('SonarQubeServer') { bat 'mvn sonar:sonar' } } }
     }
 
     post {
