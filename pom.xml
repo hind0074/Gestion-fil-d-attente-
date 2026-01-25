@@ -12,7 +12,9 @@
 <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+<sonar.projectKey>gestion-fil-d-attente</sonar.projectKey> <sonar.projectName>Gestion fil d'attente</sonar.projectName> <sonar.host.url>http://localhost:9000</sonar.host.url>
 </properties>
+
 
 
     <dependencies>
@@ -58,6 +60,12 @@
                 <target>17</target>
             </configuration>
         </plugin>
+        <plugin>
+  <groupId>org.sonarsource.scanner.maven</groupId>
+  <artifactId>sonar-maven-plugin</artifactId>
+  <version>3.9.1.2184</version>
+</plugin>
+        
     </plugins>
 </build>
 
