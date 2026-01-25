@@ -34,7 +34,14 @@ pipeline {
             }
         }
 
-        stage('Analyse SonarQube') { steps { withSonarQubeEnv('SonarQubeServer') { bat 'mvn sonar:sonar' } } }
+     stage('Analyse SonarQube') {
+    steps {
+        withSonarQubeEnv('SonarQubeServer') {
+            bat "mvn sonar:sonar -Dsonar.branch.name=develop"
+        }
+    }
+}
+
     }
 
     post {
