@@ -22,11 +22,7 @@ pipeline {
             }
         }
 
-       stage('Tests unitaires') {
-    steps {
-        bat 'mvn test jacoco:report'
-    }
-}
+    
 
 
         stage('Générer le package') {
@@ -35,7 +31,14 @@ pipeline {
             }
         }
 
-        stage('Analyse SonarQube') { steps { withSonarQubeEnv('SonarQubeServer') { bat 'mvn sonar:sonar' } } }
+       stage('Analyse SonarQube') {
+    steps {
+        withSonarQubeEnv('SonarQubeServer') {
+            bat 'mvn clean verify sonar:sonar'
+        }
+    }
+}
+
     }
 
     post {
