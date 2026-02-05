@@ -11,6 +11,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 <sonar.projectKey>gestion-fil-d-attente</sonar.projectKey> <sonar.projectName>Gestion fil d'attente</sonar.projectName> <sonar.host.url>http://localhost:9000</sonar.host.url>
+<sonar.coverage.jacoco.xmlReportPaths> ${project.basedir}/target/site/jacoco/jacoco.xml </sonar.coverage.jacoco.xmlReportPaths>
 </properties>
     <dependencies>
         <!-- Servlet API -->
@@ -56,6 +57,32 @@
   <artifactId>sonar-maven-plugin</artifactId>
   <version>3.9.1.2184</version>
 </plugin>
+<plugin>
+  <groupId>org.jacoco</groupId>
+  <artifactId>jacoco-maven-plugin</artifactId>
+  <version>0.8.10</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>prepare-agent</goal>
+      </goals>
+    </execution>
+    <execution>
+      <id>report</id>
+      <phase>prepare-package</phase>
+      <goals>
+        <goal>report</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+
     </plugins>
+    
+    <resources> <resource> <directory>WebContent</directory> <targetPath></targetPath> <includes> <include>**/*</include> </includes> </resource>
+    <resource> <directory>src/main/resources</directory> <includes> <include>**/*.properties</include> </includes> </resource> 
+     </resources>
+    
+    
 </build>
 </project>
