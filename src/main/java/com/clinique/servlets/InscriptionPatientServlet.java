@@ -49,5 +49,5 @@ public class InscriptionPatientServlet extends HttpServlet {
         patient.setDateDeNaissance(Date.valueOf(request.getParameter("dateNaissance")));
 
         patientDAO.createPatient(patient);
-        response.sendRedirect("views/Login.jsp");
+        response.sendRedirect("views/login.jsp");
     }}
