@@ -22,11 +22,12 @@ pipeline {
             }
         }
 
-        stage('Tests unitaires') {
-            steps {
-                bat 'mvn test'
-            }
-        }
+       stage('Tests unitaires') {
+    steps {
+        bat 'mvn test jacoco:report'
+    }
+}
+
 
         stage('Générer le package') {
             steps {
